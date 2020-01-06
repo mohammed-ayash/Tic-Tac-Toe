@@ -1,9 +1,8 @@
 import java.util.Scanner;
-//TODO check all point depth.
 public class Main {
     static Scanner scanner=new Scanner(System.in);
     static controller controller=new controller();
-    static int depth=5;
+    static int depth=7;
     public static void main(String[] args) {
         int x,y;
         System.out.println("\n  ******** Ultimate Tic-Tac-Toe Game ******** \n");
@@ -23,6 +22,13 @@ public class Main {
     public static void startGame(Grid grid,int x,int y){
         int row, col;
         while (grid.Win() == Cell.State.Empty){
+            while (grid.getBigGrid()[x][y].Win() != Cell.State.Empty ){
+                System.out.println(" the matrix is win");
+                grid.print();
+                System.out.print(" ReEnter Your Location in Big Grid :");
+                x=scanner.nextInt();
+                y=scanner.nextInt();
+            }
                 System.out.print(" Enter Your Location (" +x+","+y+") in Small Grid :");
                 row = scanner.nextInt();
                 col = scanner.nextInt();
@@ -34,11 +40,11 @@ public class Main {
                     row=scanner.nextInt();
                     col=scanner.nextInt();
                 }
-                grid.bigGrid[x][y].getCells()[row][col].setState(Cell.State.X);
+                grid.getBigGrid()[x][y].getCells()[row][col].setState(Cell.State.X);
                 grid.print();
                 // if for check for win
                 // else if for check for game finish(ismovesfinish)
-                Position position=controller.computerMove(grid,grid.bigGrid[row][col],depth);
+                Position position=controller.computerMove(grid,grid.getBigGrid()[row][col],depth);
                 x=position.row;
                 y=position.col;
                 grid.print();

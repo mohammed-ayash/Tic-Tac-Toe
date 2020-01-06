@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class SmallGrid {
-    public int smalllRow = 3;
-    public int smallCol = 3;
-    Cell [][] Cells;
+    private int smalllRow = 3;
+    private int smallCol = 3;
+    private Cell [][] Cells;
 
     SmallGrid()
     {
@@ -13,6 +13,7 @@ public class SmallGrid {
                 Cells[i][j]=new Cell(i,j,Getvalue(i,j));
             }
     }
+
     private int Getvalue(int i,int j)
     {
         if (i == 1 && j == 1)
@@ -30,18 +31,6 @@ public class SmallGrid {
 
     }
 
-   /* public smallGrid copy()
-    {
-        SmallGrid CellsCopy = new SmallGrid();
-        Cell[][] copy = new Cell[3][3];
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++) {
-                copy[i][j] = this.smallGrid[i][j];
-            }
-        smallGridCopy.setSmallGrid(copy);
-        return smallGridCopy;
-    }
-*/
     public ArrayList<Cell> getAllPossibleMoves()
     {
         ArrayList<Cell> arrayCell = new ArrayList<>();
@@ -55,16 +44,6 @@ public class SmallGrid {
         return arrayCell;
     }
 
-    /*
-    public void print() {
-       for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(Cells[i][j] + " ");
-            }
-            System.out.print("\t");
-        }
-    }
-     */
 
     public Cell[][] getCells()
     {
@@ -107,8 +86,4 @@ public class SmallGrid {
 
         return Cell.State.Empty;
     }
-
-
-
-
 }

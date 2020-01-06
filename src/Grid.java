@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class Grid {
-    public  int GridRow = 3;
-    public  int GridCol = 3;
-    SmallGrid[][] bigGrid;
+    private  int GridRow = 3;
+    private  int GridCol = 3;
+    private  SmallGrid[][] bigGrid;
 
     public Grid(){
         bigGrid =new SmallGrid[GridRow][GridCol];
@@ -12,34 +12,11 @@ public class Grid {
                 bigGrid[i][j]=new SmallGrid();
             }
         }
-        // initializGrid();
-    }
-   /* public void initializGrid() {
-        for (int i = 0; i <3 ; i++) {
-            for (int j = 0; j <3 ; j++) {
-                for (int k = 0; k <3 ; k++) {
-                    for (int l = 0; l <3 ; l++) {
-                        bigGrid[i][j].getSmallGrid()[k][l]='_';
-                    }
-                }
-                }
-            }
-        }
-     */
-        /*
-    public void print(){
-        System.out.println("----------+-----------+-----------+");
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.println();
-                        bigGrid[i][j].print();
-            }
-            System.out.println();
-            System.out.print("----------+-----------+-----------+");
-        }
     }
 
-         */
+    public SmallGrid[][] getBigGrid() {
+        return bigGrid;
+    }
 
     public void print(){
         System.out.println();
@@ -60,34 +37,10 @@ public class Grid {
         }
     }
 
-   /* public Grid copy() {
-        Grid grid=new Grid();
-        SmallGrid[][] bigGridCopy = new SmallGrid[3][3];
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++) {
-                bigGridCopy[i][j]=bigGrid[i][j].copy();
-            }
-        grid.setBigGrid(bigGridCopy);
-        return grid;
-    }
-*/
     public void setBigGrid(SmallGrid[][] bigGrid) {
         this.bigGrid = bigGrid;
     }
 
-   /* public ArrayList<Grid> getPossibleGrids(int i,int j){
-        ArrayList<Grid> grids=new ArrayList<>();
-        ArrayList<SmallGrid> possibleSmallGrids=bigGrid[i][j].getAllPossibleMoves();
-
-        for (int k = 0; k < possibleSmallGrids.size(); k++) {
-            SmallGrid sm= possibleSmallGrids.get(k);
-
-            Grid copy=this.copy();
-            copy.bigGrid[i][j].setSmallGrid(sm.copy().smallGrid);
-            grids.add(copy.copy());
-        }
-        return grids;
-    }*/
 
     public  Cell.State checkRowCol(Cell.State c1, Cell.State c2, Cell.State c3)
     {
@@ -130,11 +83,6 @@ public class Grid {
         else if (bigGrid[x][y].getCells()[row][column].getState() == Cell.State.X || bigGrid[x][y].getCells()[row][column].getState() == Cell.State.O)
         {
             System.out.println("already token");
-            return true;
-        }
-        else if (bigGrid[x][y].Win() != Cell.State.Empty)
-        {
-            System.out.println("matrix is win");
             return true;
         }
         return false;
