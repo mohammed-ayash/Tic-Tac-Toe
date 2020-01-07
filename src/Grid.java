@@ -1,15 +1,38 @@
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 public class Grid {
     private  int GridRow = 3;
     private  int GridCol = 3;
     private  SmallGrid[][] bigGrid;
+    private int scoreComputer = 0;
+    private ArrayList<Position> positions = new ArrayList<>();
+
+    public void addPos(Position position){
+        positions.add(position);
+    }
+
+    public ArrayList<Position> getPositions() {
+        return positions;
+    }
+
+
+    private Position positionBest;
+
+    public void setPositionBest(Position positionBest) {
+        this.positionBest = positionBest;
+    }
+
+    public int getScoreComputer() {
+        return scoreComputer;
+    }
 
     public Grid(){
         bigGrid =new SmallGrid[GridRow][GridCol];
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                bigGrid[i][j]=new SmallGrid();
+                bigGrid[i][j]=new SmallGrid(controller.getWeight(i, j));
             }
         }
     }
@@ -88,5 +111,36 @@ public class Grid {
         return false;
     }
 
+    //================
+    public int calculateEvaluateInBigGridComputer(){
+        int score = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                SmallGrid smallGrid = bigGrid[i][j];
+                int subScore = smallGrid.getEvaluatePlayer(Cell.State.O);
+                score += subScore*smallGrid.getWeight();
+            }
+        }
+        this.scoreComputer = score;
+        return scoreComputer;
+    }
+
+    public int calculateEvaluateInBigGridPlayer(Cell.State player){
+        int score = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                SmallGrid smallGrid = bigGrid[i][j];
+                int subScore = smallGrid.getEvaluatePlayer(player);
+                score += subScore*smallGrid.getWeight();
+            }
+        }
+        return score;
+    }
+
+    public Grid deepCopy(){
+        Gson gson = new Gson();
+        String strOpj= gson.toJson(this);
+        return gson.fromJson(strOpj, Grid.class);
+    }
 }
 

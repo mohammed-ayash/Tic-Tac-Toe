@@ -13,7 +13,7 @@ public class Cell {
     private int y;
 
 
-    public Cell(int x,int y,int weight) {
+    public Cell(int x, int y, int weight) {
         this.state = State.Empty;
         this.weight = weight;
         this.x=x;
@@ -23,12 +23,7 @@ public class Cell {
     public void setState(State state) {
         this.state = state;
     }
-    public void setX(int x) {
-        this.x = x;
-    }
-    public void setY(int y) {
-        this.y = y;
-    }
+
 
     public State getState() {
         return state;

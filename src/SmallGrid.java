@@ -1,35 +1,22 @@
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class SmallGrid {
     private int smalllRow = 3;
     private int smallCol = 3;
+    private int weight;
     private Cell [][] Cells;
 
-    SmallGrid()
-    {
+    SmallGrid(int weight) {
+        this.weight = weight;
         Cells = new Cell[smalllRow][smallCol];
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++) {
-                Cells[i][j]=new Cell(i,j,Getvalue(i,j));
+                Cells[i][j]=new Cell(i,j, controller.getWeight(i,j));
             }
     }
 
-    private int Getvalue(int i,int j)
-    {
-        if (i == 1 && j == 1)
-            return 4;
-        else if (i == 0 && j == 0)
-            return 3;
-        else if (i == 0 && j == 2)
-            return 3;
-        else if (i == 2 && j == 0)
-            return 3;
-        else if (i == 2 && j == 2)
-            return 3;
-        else
-            return 2;
 
-    }
 
     public ArrayList<Cell> getAllPossibleMoves()
     {
@@ -44,6 +31,10 @@ public class SmallGrid {
         return arrayCell;
     }
 
+
+    public int getWeight() {
+        return weight;
+    }
 
     public Cell[][] getCells()
     {
@@ -86,4 +77,18 @@ public class SmallGrid {
 
         return Cell.State.Empty;
     }
+
+
+    public int getEvaluatePlayer(Cell.State player){
+        int score = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (Cells[i][j].getState() == player){
+                    score += Cells[i][j].getWeight();
+                }
+            }
+        }
+        return score;
+    }
+
 }

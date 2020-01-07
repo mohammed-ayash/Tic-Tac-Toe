@@ -1,10 +1,26 @@
-import javax.print.DocFlavor;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class controller {
 
     // Methods
+    public static int getWeight(int i,int j) {
+        if (i == 1 && j == 1)
+            return 4;
+        else if (i == 0 && j == 0)
+            return 3;
+        else if (i == 0 && j == 2)
+            return 3;
+        else if (i == 2 && j == 0)
+            return 3;
+        else if (i == 2 && j == 2)
+            return 3;
+        else
+            return 2;
+
+    }
+
+
+
     public boolean isMovesFinish(Cell board[][]){
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
@@ -13,23 +29,21 @@ public class controller {
         return false;
     }
 
-    private int Evalueate(Cell board[][])
-    {
+    private int Evaluate(Cell board[][]) {
         int score = 0;
         // Rows Win
-        for (int i = 0; i < 3; i++)
-        {
-            if (board[i][0].getState() ==board[i][1].getState() && board[i][1].getState()== board[i][ 2].getState())
-            {
+        for (int i = 0; i < 3; i++) {
+            //Check that the row is equal
+            if (board[i][0].getState() == board[i][1].getState() && board[i][1].getState()== board[i][ 2].getState()) {
                 if (board[i][0].getState() == Cell.State.O)
                 score += 100;
-                    else if (board[i][0].getState() == Cell.State.X)
+                else if (board[i][0].getState() == Cell.State.X)
                 score -= 100;
             }
         }
         // Column Win
-        for (int i = 0; i < 3; i++)
-        {
+        for (int i = 0; i < 3; i++) {
+            //Check that the Column is equal
             if (board[0][i].getState() == board[1][i].getState() && board[1][i].getState() == board[2][i].getState())
             {
                 if (board[0][i].getState() == Cell.State.O)
@@ -83,7 +97,7 @@ public class controller {
 
 
     public int minMax(Grid grid,SmallGrid board,int depth,boolean isMax){
-        int score=Evalueate(board.getCells());
+        int score= Evaluate(board.getCells());
         // If Opponent (Max) has won the game
         if(depth == 0)
             return score;
@@ -183,6 +197,45 @@ public class controller {
         System.out.println("positin" + position.row + " " + position.col);
         board.getCells()[position.row][position.col].setState(Cell.State.O);
         return position;
-
     }
+
+
+
+    public Position computerMove2(Grid gridBig, Position positionSmall, int depth){
+        Grid best = getBestPositionForAllMoveAvailable(gridBig, positionSmall, depth);
+        return best.getPositions().get(0);
+    }
+
+
+
+
+    public Grid getBestPositionForAllMoveAvailable(Grid gridBig, Position positionSmall, int depth){
+        Cell.State player = depth % 2 == 0 ? Cell.State.O : Cell.State.X;
+        Grid bestGrid = null;
+        for (int i = 0; i <  gridBig.getBigGrid()[positionSmall.row][positionSmall.col].getAllPossibleMoves().size(); i++) {
+            Grid tempGridBig = gridBig.deepCopy();
+            SmallGrid tempSmallGrid = tempGridBig.getBigGrid()[positionSmall.row][positionSmall.col];
+            Cell cell = tempSmallGrid.getAllPossibleMoves().get(i);
+            cell.setState(player);
+            Position position = new Position(cell.getX(), cell.getY());
+            tempGridBig.addPos(position);
+            if (depth>0){
+                depth--;
+                return getBestPositionForAllMoveAvailable(tempGridBig, position, depth);
+            }else {
+                int tempScore = tempGridBig.calculateEvaluateInBigGridComputer();
+                int enemyEvaluate =  tempGridBig.calculateEvaluateInBigGridPlayer(Cell.State.X);
+                if (bestGrid == null || tempScore > enemyEvaluate){
+                    bestGrid = tempGridBig;
+                }
+            }
+        }
+        return bestGrid;
+    }
+
+
+
+
+
+
 }
