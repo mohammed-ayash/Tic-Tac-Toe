@@ -2,7 +2,7 @@ import java.util.Scanner;
 public class Main {
     static Scanner scanner=new Scanner(System.in);
     static controller controller=new controller();
-    static int depth=7;
+    static int depth=5;
     public static void main(String[] args) {
         int x,y;
         System.out.println("\n  ******** Ultimate Tic-Tac-Toe Game ******** \n");

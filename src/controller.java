@@ -60,9 +60,9 @@ public class controller {
             for (int j = 0; j < 3; j++)
             {
                 if (board[i][j].getState() == Cell.State.O)
-                score += 1;
+                score += board[i][j].getWeight();
                 if (board[i][j].getState() == Cell.State.X)
-                score -= 1;
+                score -= board[i][j].getWeight();
             }
 
             if ((board[i][0].getState() == Cell.State.O && board[i][1].getState() == Cell.State.O) || (board[i][0].getState() == Cell.State.O && board[i][2].getState() == Cell.State.O) || (board[i][1].getState() == Cell.State.O && board[i][2].getState() == Cell.State.O))
@@ -81,68 +81,79 @@ public class controller {
         return score;
     }
 
+    public int EvalueateBiggrid(Grid grid){
+        SmallGrid board;
+        int score=0;
+        for(int i=0;i<3;i++)
+            for(int j=0;j<3;j++)
+            {   board= grid.getBigGrid()[i][j];
+                score+=Evalueate(board.getCells());
+            }
+        return score;
+    }
+
 
     public int minMax(Grid grid,SmallGrid board,int depth,boolean isMax){
-        int score=Evalueate(board.getCells());
+        int score=(isMax)? Integer.MIN_VALUE : Integer.MAX_VALUE;
         // If Opponent (Max) has won the game
-        if(depth == 0)
+        if(depth == 0) {
+            score = EvalueateBiggrid(grid);
             return score;
+        }
         // No Steps Available and No Winner
-        if(!isMovesFinish(board.getCells()))
-            return 0;
         //if the matrix is closed
-        if (board.Win() != Cell.State.Empty) {
+        if (board.Win() != Cell.State.Empty || !isMovesFinish(board.getCells())) {
             if (isMax) {
-                int temp = -10000;
+           //   int temp = -10000;
                 for (int a = 0; a < 3; a++)
                     for (int b = 0; b < 3; b++)
-                        if (grid.getBigGrid()[a][b].Win() == Cell.State.Empty) {
-                            temp = Math.max(temp, minMax(grid, grid.getBigGrid()[a][b], depth - 1, true));
+                        if (grid.getBigGrid()[a][b].Win() == Cell.State.Empty || isMovesFinish(board.getCells())) {
+                            score = Math.max(score, minMax(grid, grid.getBigGrid()[a][b], depth - 1, true));
                         }
-                return temp;
+                return score;
             } else {
-                int temp = +10000;
+           //   int temp = +10000;
                 for (int a = 0; a < 3; a++)
                     for (int b = 0; b < 3; b++)
                         if (grid.getBigGrid()[a][b].Win() == Cell.State.Empty) {
-                            temp = Math.min(temp, minMax(grid, grid.getBigGrid()[a][b], depth - 1, false));
+                            score = Math.min(score, minMax(grid, grid.getBigGrid()[a][b], depth - 1, false));
                         }
-                return temp;
+                return score;
             }
         }
         // Opponent(Max) Moves
         if(isMax){
-            int temp = -10000;
+        //  int temp = Integer.MIN_VALUE;
             for (int i = 0; i <3 ; i++) {
                 for (int j = 0; j <3 ; j++) {
                     if(board.getCells()[i][j].getState() == Cell.State.Empty){
-                        int weight=board.getCells()[i][j].getWeight();
+                  //    int weight=board.getCells()[i][j].getWeight();
                         board.getCells()[i][j].setState(Cell.State.O);
-                        temp=Math.max(temp,(score*weight)+minMax(grid,grid.getBigGrid()[i][j],depth-1,false));
+                        score=Math.max(score,minMax(grid,grid.getBigGrid()[i][j],depth-1,false));
                         board.getCells()[i][j].setState(Cell.State.Empty);
                     }
                 }
             }
-            return temp;
+            return score;
         }
         else {
-            int temp=+10000;
+        //  int temp=Integer.MAX_VALUE;
             for (int i = 0; i <3 ; i++) {
                 for (int j = 0; j <3 ; j++) {
                     if(board.getCells()[i][j].getState() == Cell.State.Empty){
-                        int weight=board.getCells()[i][j].getWeight();
+                    //  int weight=board.getCells()[i][j].getWeight();
                         board.getCells()[i][j].setState(Cell.State.X);
-                        temp=Math.min(temp,(score*weight)+minMax(grid,grid.getBigGrid()[i][j],depth-1,true));
+                        score=Math.min(score,minMax(grid,grid.getBigGrid()[i][j],depth-1,true));
                         board.getCells()[i][j].setState(Cell.State.Empty);
                     }
                 }
             }
-            return temp;
+            return score;
         }
     }
 
     public Position computerMove(Grid grid,SmallGrid board,int depth){
-        int temp=-10000;
+        int temp=Integer.MIN_VALUE;
         int i,j;
         ArrayList<Cell> possibleMove =new ArrayList<>();
         if (board.Win() != Cell.State.Empty){
@@ -178,9 +189,8 @@ public class controller {
 
             }
         }
-
         System.out.printf(" The value of the best Move " + "is : %d ", temp);
-        System.out.println("positin" + position.row + " " + position.col);
+        System.out.println("position " + position.row + " " + position.col);
         board.getCells()[position.row][position.col].setState(Cell.State.O);
         return position;
 
